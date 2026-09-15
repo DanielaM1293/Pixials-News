@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixials News — Tecnología del futuro, hoy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  /* Estilos exclusivos del Home */
+  .hero{
+    padding:52px 0 70px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap:44px;
+    align-items:center;
+  }
+  .hero-copy .tag{ margin-bottom:18px; }
+  .hero-copy h1{
+    font-size:clamp(2.2rem, 5vw, 3.4rem);
+    line-height:1.08;
+  }
+  .hero-copy h1 .glow{
+    color:var(--cian);
+    text-shadow:0 0 22px rgba(0,245,255,.55);
+  }
+  .hero-copy p{ color:var(--text-dim); font-size:1.05rem; max-width:480px; margin:18px 0 30px; }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+
+  /* Carrusel */
+  .carousel{
+    position:relative;
+    border:1px solid var(--line);
+    background:var(--panel);
+    overflow:hidden;
+  }
+  .carousel-track{
+    display:flex;
+    transition:transform .55s cubic-bezier(.65,0,.35,1);
+  }
+  .slide{
+    min-width:100%;
+    position:relative;
+    aspect-ratio:4/5;
+  }
+  .slide img{ width:100%; height:100%; object-fit:cover; }
+  .slide::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 30%, rgba(6,11,24,.95) 92%);
+  }
+  .slide-copy{
+    position:absolute; left:0; right:0; bottom:0;
+    padding:26px 24px 22px;
+    z-index:2;
+  }
+  .slide-copy .tag{ margin-bottom:10px; }
+  .slide-copy h3{ font-size:1.2rem; margin-bottom:8px; }
+  .slide-copy a{ font-family:var(--font-head); color:var(--cian); font-size:.85rem; }
+
+  .carousel-nav{
+    position:absolute; top:14px; right:14px; z-index:3;
+    display:flex; gap:8px;
+  }
+  .carousel-nav button{
+    width:34px; height:34px;
+    background:rgba(6,11,24,.6);
+    border:1px solid var(--line);
+    color:var(--text);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .carousel-nav button:hover{ border-color:var(--cian); color:var(--cian); }
+
+  .carousel-dots{
+    position:absolute; left:24px; bottom:110px; z-index:3;
+    display:flex; gap:8px;
+  }
+  .carousel-dots button{
+    width:22px; height:3px; padding:0;
+    background:var(--line); border:none;
+  }
+  .carousel-dots button.active{ background:var(--cian); }
+
+  /* Acerca de */
+  .about{
+    display:grid;
+    grid-template-columns:0.9fr 1.1fr;
+    gap:48px;
+    align-items:center;
+  }
+  .about-visual{
+    aspect-ratio:1/1;
+    border:1px solid var(--line);
+    background:
+      linear-gradient(135deg, rgba(0,245,255,.10), rgba(255,62,200,.10)),
+      var(--panel);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .about-visual span{
+    font-family:var(--font-head);
+    font-size:5.5rem;
+    background:linear-gradient(120deg, var(--cian), var(--magenta));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .about-text p{ color:var(--text-dim); }
+
+  /* CTA banda */
+  .cta-band{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(90deg, rgba(0,245,255,.06), rgba(139,92,246,.08));
+  }
+  .cta-band .inner{
+    display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+    padding:38px 0;
+  }
+  .cta-band h2{ font-size:1.5rem; margin:0; }
+  .cta-band p{ margin:6px 0 0; color:var(--text-dim); }
+
+  @media (max-width:860px){
+    .hero-grid, .about{ grid-template-columns:1fr; }
+    .hero-copy p{ max-width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a href="index.html" class="brand"><span class="brand-mark"></span>PIXIALS <span>NEWS</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="listado.html">Noticias</a></li>
+      <li><a href="listado.html?filtro=favoritos">Favoritos <em data-fav-count style="font-style:normal;color:var(--magenta)"></em></a></li>
+      <li><a href="index.html#acerca">Acerca</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="tag">Edición 14 sep. 2026</span>
+        <h1>La tecnología que viene, <span class="glow">contada hoy</span>.</h1>
+        <p>Pixials News cubre hardware, inteligencia artificial y el desarrollo web que está redefiniendo lo posible — sin relleno, sin ruido.</p>
+        <div class="hero-actions">
+          <a href="listado.html" class="btn btn-primary cut">Explorar noticias</a>
+          <a href="#destacadas" class="btn btn-ghost cut">Ver destacadas</a>
+        </div>
+      </div>
+
+      <div class="carousel cut" id="carousel">
+        <div class="carousel-track" id="carouselTrack"></div>
+        <div class="carousel-nav">
+          <button id="prevBtn" aria-label="Anterior">←</button>
+          <button id="nextBtn" aria-label="Siguiente">→</button>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESTACADAS -->
+  <section class="section" id="destacadas">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Lo último</p>
+          <h2 class="mt-0">Noticias recientes</h2>
+        </div>
+        <a href="listado.html" class="btn btn-ghost cut-sm">Ver todo el catálogo</a>
+      </div>
+      <div class="news-grid" id="latestGrid"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-band">
+    <div class="container inner">
+      <div>
+        <h2>¿Quieres guardar lo que te interesa?</h2>
+        <p>Marca noticias como favoritas y encuéntralas después en un solo lugar.</p>
+      </div>
+      <a href="listado.html" class="btn btn-primary cut">Empezar a explorar</a>
+    </div>
+  </div>
+
+  <!-- ACERCA -->
+  <section class="section" id="acerca">
+    <div class="container about">
+      <div class="about-visual cut">
+        <span>PX</span>
+      </div>
+      <div class="about-text">
+        <p class="eyebrow">Acerca de Pixials News</p>
+        <h2>Periodismo tecnológico, hecho por curiosidad</h2>
+        <p>Somos un equipo pequeño que sigue de cerca la investigación, el hardware y el desarrollo de software que normalmente pasa desapercibido. No perseguimos el titular fácil: elegimos historias que explican hacia dónde va la tecnología y por qué importa.</p>
+        <p>Este sitio es también un ejercicio abierto: cada noticia que ves puede guardarse, y el catálogo puede ampliarse directamente desde el panel de noticias.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="brand"><span class="brand-mark"></span>PIXIALS <span>NEWS</span></a>
+        <p style="margin-top:12px;max-width:320px;">Cobertura de tecnología, hardware e inteligencia artificial, publicada desde 2026.</p>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="listado.html">Noticias</a></li>
+          <li><a href="listado.html?filtro=favoritos">Favoritos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="mailto:redaccion@pixialsnews.dev">redaccion@pixialsnews.dev</a></li>
+          <li><a href="contacto.html">Formulario de contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Pixials News. Proyecto académico — Módulo Front-end.</span>
+      <span>Hecho con HTML, CSS y JavaScript.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>
