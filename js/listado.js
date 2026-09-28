@@ -13,7 +13,7 @@ let soloFavoritos = false;   // true cuando se llega desde el menú "Favoritos"
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    await datosListos;
+    await window.datosListos;
   } catch (error) {
     console.error(error);
     mostrarErrorCarga("newsGrid");
