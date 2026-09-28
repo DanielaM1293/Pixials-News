@@ -92,13 +92,14 @@ const NOTICIAS_SEED = [
   }
 ];
 
-// Claves usadas en localStorage
+// Claves con las que se guardan los datos en localStorage
 const LS_KEYS = {
   NOTICIAS: "pixials_noticias",
   FAVORITOS: "pixials_favoritos"
 };
 
-// Inicializa el "JSON local" en localStorage la primera vez que se visita el sitio
+// Primera visita: copia las noticias base ("JSON local") a localStorage
+// y crea la lista de favoritos vacía. Si ya existen, no las sobrescribe.
 function inicializarDatos() {
   if (!localStorage.getItem(LS_KEYS.NOTICIAS)) {
     localStorage.setItem(LS_KEYS.NOTICIAS, JSON.stringify(NOTICIAS_SEED));
@@ -108,15 +109,18 @@ function inicializarDatos() {
   }
 }
 
+// Devuelve el arreglo de noticias (convierte el texto guardado a objetos)
 function obtenerNoticias() {
   inicializarDatos();
   return JSON.parse(localStorage.getItem(LS_KEYS.NOTICIAS));
 }
 
+// Guarda el arreglo completo de noticias (usado al crear y eliminar)
 function guardarNoticias(noticias) {
   localStorage.setItem(LS_KEYS.NOTICIAS, JSON.stringify(noticias));
 }
 
+// Busca una noticia por id; Number() porque en la URL llega como texto
 function obtenerNoticiaPorId(id) {
   return obtenerNoticias().find(n => n.id === Number(id));
 }
