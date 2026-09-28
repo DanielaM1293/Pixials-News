@@ -11,36 +11,54 @@ let filtroActual = "todas";  // categoría seleccionada
 let terminoBusqueda = "";    // texto del buscador (en minúsculas)
 let soloFavoritos = false;   // true cuando se llega desde el menú "Favoritos"
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await datosListos;
+  } catch (error) {
+    console.error(error);
+    mostrarErrorCarga("newsGrid");
+    return;
+  }
+
   // Si la URL trae ?filtro=favoritos, se muestra solo la lista de favoritas
   const params = new URLSearchParams(window.location.search);
   soloFavoritos = params.get("filtro") === "favoritos";
 
   if (soloFavoritos) {
-    document.getElementById("pageTitle").textContent = "Tus noticias favoritas";
+    const pageTitle = document.getElementById("pageTitle");
+    if (pageTitle) pageTitle.textContent = "Tus noticias favoritas";
   }
 
   // Dibujo inicial de la página
-  renderChips();       // botones de categoría
-  renderGrid();        // tarjetas de noticias
-  renderManageList();  // lista del panel de administración
+  renderChips();        // botones de categoría
+  renderGrid();         // tarjetas de noticias
+  renderManageList();   // lista del panel de administración
 
   // Buscador: se filtra en cada tecla que el usuario escribe
-  document.getElementById("searchInput").addEventListener("input", (e) => {
-    terminoBusqueda = e.target.value.trim().toLowerCase();
-    renderGrid();
-  });
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      terminoBusqueda = e.target.value.trim().toLowerCase();
+      renderGrid();
+    });
+  }
 
   // Panel de administración: se despliega y se pliega al hacer clic
-  document.getElementById("crudToggle").addEventListener("click", () => {
-    const body = document.getElementById("crudBody");
-    const icon = document.getElementById("crudIcon");
-    body.classList.toggle("open");
-    icon.textContent = body.classList.contains("open") ? "–" : "＋";
-  });
+  const crudToggle = document.getElementById("crudToggle");
+  if (crudToggle) {
+    crudToggle.addEventListener("click", () => {
+      const body = document.getElementById("crudBody");
+      const icon = document.getElementById("crudIcon");
+      if (body) body.classList.toggle("open");
+      if (icon) icon.textContent = body.classList.contains("open") ? "–" : "＋";
+    });
+  }
 
   // Formulario de creación de noticias
-  document.getElementById("newsForm").addEventListener("submit", manejarCreacion);
+  const newsForm = document.getElementById("newsForm");
+  if (newsForm) {
+    newsForm.addEventListener("submit", manejarCreacion);
+  }
 });
 
 /* =========================================================
@@ -53,10 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
  * que si se crea una noticia de otra categoría, aparece un chip nuevo.
  */
 function renderChips() {
+  const wrap = document.getElementById("filterChips");
+  if (!wrap) return;
+
   const noticias = obtenerNoticias();
   // Set elimina categorías repetidas; "todas" va siempre primero
   const categorias = ["todas", ...new Set(noticias.map(n => n.categoria))];
-  const wrap = document.getElementById("filterChips");
   wrap.innerHTML = categorias.map(c => `
     <button class="chip cut-sm ${c === filtroActual ? "active" : ""}" data-cat="${c}">
       ${c === "todas" ? "Todas" : c}
@@ -108,18 +128,22 @@ function obtenerNoticiasFiltradas() {
 function renderGrid() {
   const grid = document.getElementById("newsGrid");
   const empty = document.getElementById("emptyState");
+  if (!grid) return;
+
   const noticias = obtenerNoticiasFiltradas();
 
   // Sin resultados: limpiar la grilla y mostrar el mensaje
   if (noticias.length === 0) {
     grid.innerHTML = "";
-    empty.style.display = "block";
-    if (soloFavoritos) {
-      empty.textContent = "Aún no tienes noticias en favoritos. Ve al catálogo y marca las que te interesen con ★.";
+    if (empty) {
+      empty.style.display = "block";
+      if (soloFavoritos) {
+        empty.textContent = "Aún no tienes noticias en favoritos. Ve al catálogo y marca las que te interesen con ★.";
+      }
     }
     return;
   }
-  empty.style.display = "none";
+  if (empty) empty.style.display = "none";
 
   // Una tarjeta por noticia: imagen, categoría, título, resumen y acciones
   grid.innerHTML = noticias.map(n => `
@@ -177,16 +201,18 @@ function manejarCreacion(e) {
 
   // Recorre cada campo: limpia errores previos y valida los obligatorios
   Object.entries(campos).forEach(([clave, el]) => {
+    if (!el) return;
     const field = el.closest(".field");
+    if (!field) return;
     const errorMsg = field.querySelector(".error-msg");
     field.classList.remove("error");
-    errorMsg.textContent = "";
+    if (errorMsg) errorMsg.textContent = "";
 
     if (clave === "imagen") return; // opcional: no se valida
 
     if (!el.value.trim()) {
       field.classList.add("error");
-      errorMsg.textContent = "Este campo es obligatorio.";
+      if (errorMsg) errorMsg.textContent = "Este campo es obligatorio.";
       valido = false;
     }
   });
@@ -225,6 +251,8 @@ function manejarCreacion(e) {
  */
 function renderManageList() {
   const wrap = document.getElementById("manageList");
+  if (!wrap) return;
+
   // [...] crea una copia para no alterar el orden del arreglo original
   const noticias = [...obtenerNoticias()].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
