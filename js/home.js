@@ -1,6 +1,14 @@
 // home.js — carrusel de destacadas y últimas noticias
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await datosListos;
+  } catch (error) {
+    console.error(error);
+    mostrarErrorCarga("latestGrid");
+    return;
+  }
+
   const noticias = obtenerNoticias();
   const destacadas = noticias.filter(n => n.destacada);
   const recientes = [...noticias]
@@ -13,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function renderGridReciente(noticias) {
   const grid = document.getElementById("latestGrid");
+  if (!grid) return;
+
   grid.innerHTML = noticias.map(n => `
     <article class="news-card cut-sm">
       <a href="detalle.html?id=${n.id}" class="thumb">
@@ -51,6 +61,9 @@ let carTimer = null;
 function renderCarrusel(items) {
   const track = document.getElementById("carouselTrack");
   const dotsWrap = document.getElementById("carouselDots");
+  const carousel = document.getElementById("carousel");
+
+  if (!track || !dotsWrap || !items.length) return;
 
   track.innerHTML = items.map(n => `
     <div class="slide">
@@ -71,19 +84,25 @@ function renderCarrusel(items) {
     dotsWrap.querySelectorAll("button").forEach((d, idx) => d.classList.toggle("active", idx === carIndex));
   };
 
-  document.getElementById("prevBtn").addEventListener("click", () => { irA(carIndex - 1); reiniciarAuto(); });
-  document.getElementById("nextBtn").addEventListener("click", () => { irA(carIndex + 1); reiniciarAuto(); });
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  if (prevBtn) prevBtn.addEventListener("click", () => { irA(carIndex - 1); reiniciarAuto(); });
+  if (nextBtn) nextBtn.addEventListener("click", () => { irA(carIndex + 1); reiniciarAuto(); });
+
   dotsWrap.querySelectorAll("button").forEach(d => {
     d.addEventListener("click", () => { irA(Number(d.dataset.dot)); reiniciarAuto(); });
   });
 
-  const carousel = document.getElementById("carousel");
-  carousel.addEventListener("mouseenter", () => clearInterval(carTimer));
-  carousel.addEventListener("mouseleave", reiniciarAuto);
+  if (carousel) {
+    carousel.addEventListener("mouseenter", () => clearInterval(carTimer));
+    carousel.addEventListener("mouseleave", reiniciarAuto);
+  }
 
   function reiniciarAuto() {
     clearInterval(carTimer);
     carTimer = setInterval(() => irA(carIndex + 1), 5000);
   }
+  
   reiniciarAuto();
 }
