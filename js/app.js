@@ -1,3 +1,16 @@
+/**
+ * app.js — utilidades compartidas por todas las páginas de Pixials News
+ *
+ * Este archivo se carga en las cuatro vistas (Home, Listado, Detalle y
+ * Contacto). Reúne lo que todas necesitan: el menú móvil, el link activo,
+ * la gestión de favoritos y funciones auxiliares de formato.
+ *
+ * Dependencia: debe cargarse DESPUÉS de data.js, porque usa
+ * datosListos y LS_KEYS definidos allí.
+ */
+
+// Se ejecuta cuando el HTML terminó de cargarse (antes de imágenes y estilos).
+// Aquí se inicializa todo lo que es común a cualquier página.
 document.addEventListener("DOMContentLoaded", async () => {
   configurarMenuMovil();         // no depende de los datos
   marcarLinkActivo();            // no depende de los datos
@@ -8,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error(error);
   }
 });
+
 /* =========================================================
    NAVEGACIÓN
    ========================================================= */
@@ -45,8 +59,7 @@ function marcarLinkActivo() {
 
 /** Devuelve el arreglo de ids de las noticias marcadas como favoritas. */
 function obtenerFavoritos() {
-  inicializarDatos();
-  return JSON.parse(localStorage.getItem(LS_KEYS.FAVORITOS));
+  return JSON.parse(localStorage.getItem(LS_KEYS.FAVORITOS)) || [];
 }
 
 /**
@@ -108,4 +121,15 @@ function formatearFecha(iso) {
  */
 function truncar(texto, max) {
   return texto.length > max ? texto.slice(0, max).trim() + "…" : texto;
+}
+
+/**
+ * Muestra un mensaje de error dentro del contenedor indicado
+ * cuando no se pudo cargar data/noticias.json.
+ */
+function mostrarErrorCarga(idContenedor) {
+  const el = document.getElementById(idContenedor);
+  if (el) {
+    el.innerHTML = "<p>No se pudieron cargar las noticias. Si abriste el archivo directamente, usa Live Server o la versión desplegada.</p>";
+  }
 }
