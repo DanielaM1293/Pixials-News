@@ -1,23 +1,13 @@
-/**
- * app.js — utilidades compartidas por todas las páginas de Pixials News
- *
- * Este archivo se carga en las cuatro vistas (Home, Listado, Detalle y
- * Contacto). Reúne lo que todas necesitan: el menú móvil, el link activo,
- * la gestión de favoritos y funciones auxiliares de formato.
- *
- * Dependencia: debe cargarse DESPUÉS de data.js, porque usa
- * inicializarDatos() y LS_KEYS definidos allí.
- */
-
-// Se ejecuta cuando el HTML terminó de cargarse (antes de imágenes y estilos).
-// Aquí se inicializa todo lo que es común a cualquier página.
-document.addEventListener("DOMContentLoaded", () => {
-  inicializarDatos();            // asegura que localStorage tenga datos base
-  configurarMenuMovil();         // botón hamburguesa
-  marcarLinkActivo();            // resalta la página actual en el menú
-  actualizarContadorFavoritos(); // muestra cuántos favoritos hay en el header
+document.addEventListener("DOMContentLoaded", async () => {
+  configurarMenuMovil();         // no depende de los datos
+  marcarLinkActivo();            // no depende de los datos
+  try {
+    await datosListos;           // espera a que el JSON esté cargado
+    actualizarContadorFavoritos();
+  } catch (error) {
+    console.error(error);
+  }
 });
-
 /* =========================================================
    NAVEGACIÓN
    ========================================================= */
